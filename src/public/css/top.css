@@ -1,0 +1,32 @@
+body {
+    font-family: sans-serif;
+    text-align: center;
+    padding: 2rem;
+}
+
+.dan-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.dan-card {
+    border: 2px solid #444;
+    padding: 1rem;
+    border-radius: 8px;
+    width: 100px;
+}
+
+.modes {
+    margin-top: 1rem;
+}
+
+.cleared {
+    color: red;
+    font-weight: bold;
+}
+
+.header {
+    margin-bottom: 2rem;
+}
