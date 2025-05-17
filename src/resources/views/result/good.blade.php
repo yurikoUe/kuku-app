@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <title>よくできました！</title>
   <style>
+    html, body {
+      height: 100%;
+    }
     body {
       margin: 0;
       padding: 0;
@@ -62,10 +65,23 @@
     <p class="score">{{ $score }}問正解！</p>
     <img class="medal" src="/images/good.png" alt="銀メダル">
     <div class="buttons">
-        <button onclick="location.href='{{ url(request()->query('dan') . "/quiz") }}'">もういちど</button>
-        <button onclick="location.href='/'">おわる</button>
+      <button id="retry-button">もういちど</button>
+      <button onclick="location.href='/'">おわる</button>
     </div>
   </div>
   <audio id="bgm" src="/sounds/good.ogg" autoplay loop></audio>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const retryBtn = document.getElementById('retry-button');
+      retryBtn.addEventListener('click', () => {
+          const dan = localStorage.getItem('lastPlayedDan');
+          if (dan) {
+              location.href = `/${dan}/quiz`;
+          } else {
+              alert('前回の段が見つかりませんでした。');
+          }
+        });
+    });
+  </script>
 </body>
 </html>

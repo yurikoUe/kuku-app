@@ -9,6 +9,9 @@
       50%  { transform: translateY(-20px) scale(1.1); }
       100% { transform: translateY(0)    scale(1); }
     }
+    html, body {
+      height: 100%;
+    }
     body {
       margin: 0;
       padding: 0;
@@ -75,7 +78,7 @@
     <p class="score">{{ $score }}問中{{ $score }}問正解！</p>
     <img class="medal" src="/images/perfect.png" alt="金メダル">
     <div class="buttons">
-        <button onclick="location.href='{{ url(request()->query('dan') . "/quiz") }}'">もういちど</button>
+        <button id="retry-button">もういちど</button>
         <button onclick="location.href='/'">おわる</button>
     </div>
   </div>
@@ -92,6 +95,18 @@
       p.style.width = p.style.height = (10+Math.random()*20)+'px';
       document.body.appendChild(p);
     }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const retryBtn = document.getElementById('retry-button');
+      retryBtn.addEventListener('click', () => {
+          const dan = localStorage.getItem('lastPlayedDan');
+          if (dan) {
+              location.href = `/${dan}/quiz`;
+          } else {
+              alert('前回の段が見つかりませんでした。');
+          }
+        });
+    });
   </script>
 </body>
 </html>

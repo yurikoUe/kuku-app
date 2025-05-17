@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{{ $dan }}の段の練習</title>
+    <body data-mode="practice">
     <style>
         body { font-family: sans-serif; text-align: center; padding: 2rem; }
         .quiz-box { font-size: 2rem; margin: 2rem; }

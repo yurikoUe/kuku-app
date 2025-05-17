@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     questions = questions.sort(() => Math.random() - 0.5);
 
-    const questionEl = document.getElementById('question');
-    const leftBtn = document.getElementById('leftBtn');
-    const rightBtn = document.getElementById('rightBtn');
+    const questionCard = document.getElementById('question-card');
+    const answerCards = document.getElementById('answer-cards');
     const feedback = document.getElementById('feedback');
+    const progressEl = document.getElementById('progress');
     const road = document.querySelector('.quiz__road');
     const roadWidth = road.clientWidth;
     const stepPx = roadWidth / totalSteps;
@@ -30,53 +30,62 @@ document.addEventListener('DOMContentLoaded', () => {
     const soundFinish7 = new Audio('/sounds/finish_7.mp3');
     const soundFinishElse = new Audio('/sounds/finish_else.mp3');
 
-    // 初期位置は0
     car.dataset.position = 0;
     car.style.transform = `translateX(0px)`;
 
-    // **開始音を再生**
     soundStart.play();
 
     function showQuestion() {
+        if (questionCount >= totalQuestions) {
+            showResult();
+            return;
+        }
+
         const { a, b } = questions[questionCount];
         const correct = a * b;
 
-        questionEl.textContent = `${a} × ${b} = ?`;
+        questionCard.textContent = `${a} × ${b} = ?`;
 
-        //進捗表示を更新
-        const progressEl = document.getElementById('progress');
         progressEl.textContent = `${questionCount + 1} / ${totalQuestions}`;
+        feedback.textContent = '';
 
-        let fake;
-        do {
-            const offset = Math.floor(Math.random() * 5 + 1);
-            fake = Math.random() < 0.5 ? correct + offset : correct - offset;
-        } while (fake === correct || fake < 0);
+        // 不正解の選択肢を3つ作る
+        const fakeAnswers = [];
+        while (fakeAnswers.length < 3) {
+            let offset = Math.floor(Math.random() * 5) + 1;
+            let fake = Math.random() < 0.5 ? correct + offset : correct - offset;
+            if (fake !== correct && fake > 0 && !fakeAnswers.includes(fake)) {
+                fakeAnswers.push(fake);
+            }
+        }
 
-        const answers = [correct, fake].sort(() => Math.random() - 0.5);
+        // 4つの選択肢をシャッフル
+        const answers = [correct, ...fakeAnswers].sort(() => Math.random() - 0.5);
 
-        leftBtn.textContent = answers[0];
-        rightBtn.textContent = answers[1];
+        // 既存の選択肢を消す
+        answerCards.innerHTML = '';
 
-        leftBtn.disabled = false;
-        rightBtn.disabled = false;
-
-        leftBtn.onclick = () => handleAnswer(answers[0], correct);
-        rightBtn.onclick = () => handleAnswer(answers[1], correct);
+        answers.forEach(answer => {
+            const btn = document.createElement('button');
+            btn.className = 'card answer';
+            btn.textContent = answer;
+            btn.disabled = false;
+            btn.onclick = () => handleAnswer(btn, answer, correct);
+            answerCards.appendChild(btn);
+        });
     }
 
-    function handleAnswer(answer, correctAnswer) {
-        leftBtn.disabled = true;
-        rightBtn.disabled = true;
-
-        const isCorrect = answer === correctAnswer;
-
-        if (isCorrect) {
+    function handleAnswer(btn, selected, correct) {
+        const allButtons = answerCards.querySelectorAll('button');
+        allButtons.forEach(b => b.disabled = true);
+    
+        if (selected === correct) {
             correctCount++;
             feedback.textContent = '正解！🎉';
             feedback.style.color = 'green';
             soundCorrect.play();
-
+    
+            // 車を進める
             let currentPos = parseInt(car.dataset.position) || 0;
             if (currentPos < totalSteps - 1) {
                 currentPos++;
@@ -84,42 +93,50 @@ document.addEventListener('DOMContentLoaded', () => {
                 car.style.transform = `translateX(${stepPx * currentPos}px)`;
             }
         } else {
-            feedback.textContent = `😭😭😭こたえは ${correctAnswer} だよ`;
+            feedback.textContent = `😭 こたえは ${correct} だよ！`;
             feedback.style.color = 'red';
             soundWrong.play();
+            // ここで不正解でも次の問題へ進む
         }
 
+        const dan = parseInt(document.getElementById('quiz-container').dataset.dan);
+        localStorage.setItem('lastPlayedDan', dan);
+    
         questionCount++;
-        if (questionCount < totalQuestions) {
-            setTimeout(() => {
-                feedback.textContent = '';
-                showQuestion();
-            }, 1000);
-        } else {
-            setTimeout(showResult, 1000);
-        }
+        setTimeout(showQuestion, 1000);
     }
+    
 
     function showResult() {
-        questionEl.textContent = '';
-        leftBtn.style.display = 'none';
-        rightBtn.style.display = 'none';
+        // questionCard.textContent = '';
+        questionCard.style.display = 'none';
+        answerCards.innerHTML = '';
         feedback.style.display = 'none';
+        progressEl.style.display = 'none';
     
         resultEl.textContent = `おつかれさま！${correctCount}問正解でした！`;
     
         let resultPage = '/result/low';
     
         if (correctCount === totalQuestions) {
+            // 合格時に localStorage に記録
+            const dan = parseInt(document.getElementById('quiz-container').dataset.dan);
+            const mode = document.body.dataset.mode; // 事前に body タグに mode="quiz" などを付ける
+    
+            if (mode && dan) {
+                localStorage.setItem(`dan_${dan}_${mode}_cleared`, 'true');
+            }
             resultPage = '/result/perfect';
         } else if (correctCount === 8 || correctCount === 7) {
             resultPage = '/result/good';
+        } else {
+            soundFinishElse.play();
         }
     
-        // 効果音なしで即遷移
-        window.location.href = `${resultPage}?score=${correctCount}&dan=${dan}`;
+        setTimeout(() => {
+            location.href = resultPage;
+        }, 2000);
     }
-    
 
     showQuestion();
 });

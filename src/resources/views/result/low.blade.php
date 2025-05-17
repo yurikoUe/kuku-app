@@ -4,6 +4,10 @@
   <meta charset="UTF-8">
   <title>つぎ がんばろう！</title>
   <style>
+    html, body {
+      height: 100%;
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -124,12 +128,24 @@
 
 
     <div class="buttons">
-        <button onclick="location.href='{{ url(request()->query('dan') . "/quiz") }}'">もういちど</button>
-
-
-        <button type="button" onclick="location.href='/'">おわる</button>
+      <button id="retry-button">もういちど</button>
+      <button type="button" onclick="location.href='/'">おわる</button>
     </div>
   </div>
   <audio id="bgm" src="/sounds/low.mp3" autoplay loop></audio>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const retryBtn = document.getElementById('retry-button');
+      retryBtn.addEventListener('click', () => {
+          const dan = localStorage.getItem('lastPlayedDan');
+          if (dan) {
+              location.href = `/${dan}/quiz`;
+          } else {
+              alert('前回の段が見つかりませんでした。');
+          }
+        });
+    });
+  </script>
 </body>
 </html>
