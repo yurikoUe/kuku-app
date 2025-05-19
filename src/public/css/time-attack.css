@@ -1,0 +1,150 @@
+body {
+    font-family: 'Arial', 'Hiragino Kaku Gothic ProN', sans-serif;
+    text-align: center;
+    background-color: #e0f7fa;
+    transition: background-image 0.5s ease;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    background-color: #4dd0e1;
+    color: white;
+    padding: 1em;
+    margin: 0 0 20px;
+    font-size: 2em;
+}
+
+#startScreen,
+#gameArea {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+#question {
+    font-size: 2em;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.answer-btn {
+    padding: 1em 2em;
+    margin: 10px;
+    font-size: 1.5em;
+    border: none;
+    border-radius: 12px;
+    background-color: #fce4ec;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    cursor: pointer;
+    min-width: 120px;
+}
+
+.answer-btn:hover {
+    background-color: #f8bbd0;
+    transform: scale(1.05);
+}
+
+.correct {
+    background-color: #81c784 !important;
+    color: white;
+}
+
+.wrong {
+    background-color: #e57373 !important;
+    color: white;
+}
+
+.game-info {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 30px;
+    flex-wrap: wrap;
+}
+
+.game-info_score,
+.game-info_timer {
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-width: 120px;
+}
+
+.game-info_score {
+    background-color: #fff9c4;
+    /* 明るい黄色 */
+    color: #f57f17;
+    /* 濃いオレンジ */
+    border: 2px solid #fdd835;
+}
+
+.game-info_timer {
+    background-color: #ffebee;
+    /* 薄い赤 */
+    color: #c62828;
+    /* 濃い赤 */
+    border: 2px solid #ef5350;
+}
+
+#result,
+#level {
+    font-size: 1.2em;
+    margin: 10px 0;
+}
+
+#nextBtn,
+#resetBtn,
+#startBtn,
+#quitBtn {
+    margin: 10px;
+    padding: 0.8em 1.5em;
+    font-size: 1.1em;
+    border-radius: 10px;
+    border: none;
+    background-color: #4dd0e1;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+#nextBtn:hover,
+#resetBtn:hover,
+#startBtn:hover,
+#quitBtn:hover {
+    background-color: #00acc1;
+    transform: scale(1.05);
+}
+
+#character {
+    width: 150px;
+    height: auto;
+    margin-top: 20px;
+}
+
+
+
+@media (max-width: 480px) {
+    .answer-btn {
+        font-size: 1.2em;
+        padding: 0.8em 1.2em;
+    }
+
+    #question {
+        font-size: 1.6em;
+    }
+
+    #character {
+        width: 120px;
+    }
+
+    .game-info_score,
+    .game-info_timer {
+        font-size: 1em;
+        padding: 8px 15px;
+    }
+}

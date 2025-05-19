@@ -17,5 +17,9 @@ Route::get('/result/{type}', function ($type) {
     return view("result.$type", compact('score', 'dan'));
 })->name('quiz.play');
 
+Route::get('/time-attack', function () {
+    return view('quiz.time-attack');
+});
+
 Route::get('/quiz', [QuizController::class, 'show']);
 Route::post('/quiz', [QuizController::class, 'check']);
